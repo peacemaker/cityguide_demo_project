@@ -56,8 +56,8 @@ def index():
             "SELECT * FROM places WHERE active = 1 ORDER BY rating DESC"
         ).fetchall()
 
-    total_places = conn.execute("SELECT COUNT(*) FROM places").fetchone()[0]
-    average_rating = conn.execute("SELECT AVG(rating) FROM places").fetchone()[0]
+    total_places = conn.execute("SELECT COUNT(*) FROM places WHERE active = 1").fetchone()[0]
+    average_rating = conn.execute("SELECT AVG(rating) FROM places WHERE active = 1").fetchone()[0]
 
     conn.close()
 
