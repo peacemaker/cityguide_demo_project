@@ -1,4 +1,4 @@
-# CityGuide Demo
+# CityGuide Demo 2
 
 A small Flask website designed for a software-development demo.
 
