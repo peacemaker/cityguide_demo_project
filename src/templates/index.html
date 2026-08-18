@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}CityGuide — Discover{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <div>
+        <p class="eyebrow">LOCAL DISCOVERY</p>
+        <h1>Find your next place to visit.</h1>
+        <p class="lead">A small demo portal for exploring interesting places around the city.</p>
+    </div>
+</section>
+
+<section class="stats">
+    <div class="stat"><strong>{{ total_places }}</strong><span>places</span></div>
+    <div class="stat"><strong>{{ average_rating }}</strong><span>average rating</span></div>
+</section>
+
+<form class="search" method="get">
+    <input name="q" value="{{ query }}" placeholder="Search by place name...">
+    <button type="submit">Search</button>
+</form>
+
+<div class="grid">
+{% for place in places %}
+    <article class="card">
+        <div class="card-top">
+            <span class="category">{{ place["category"] }}</span>
+            <span class="rating">★ {{ "%.1f"|format(place["rating"]) }}</span>
+        </div>
+        <h2>{{ place["name"] }}</h2>
+        <p>{{ place["description"] }}</p>
+        <div class="card-bottom">
+            <span>{{ place["city"] }}</span>
+            <a href="{{ url_for('place_details', place_id=place['id']) }}">Details →</a>
+        </div>
+    </article>
+{% else %}
+    <div class="empty">
+        <h2>No places found</h2>
+        <p>Try a different search term.</p>
+    </div>
+{% endfor %}
+</div>
+{% endblock %}

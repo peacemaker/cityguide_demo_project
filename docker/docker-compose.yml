@@ -1,0 +1,16 @@
+services:
+  cityguide:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: cityguide-demo
+    network_mode: host
+    volumes:
+      - cityguide_data:/app/data
+      - ../src:/app
+    environment:
+      FLASK_DEBUG: "0"
+    restart: unless-stopped
+
+volumes:
+  cityguide_data:

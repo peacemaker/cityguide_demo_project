@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}CityGuide{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header class="topbar">
+    <div class="container nav">
+        <a class="brand" href="{{ url_for('index') }}">CityGuide</a>
+        <span class="tagline">Discover places worth visiting</span>
+    </div>
+</header>
+
+<main class="container">
+    {% block content %}{% endblock %}
+</main>
+
+<footer>
+    <div class="container">Demo project · Flask + SQLite</div>
+</footer>
+</body>
+</html>

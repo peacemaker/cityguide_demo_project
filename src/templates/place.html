@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}{{ place["name"] }} — CityGuide{% endblock %}
+
+{% block content %}
+<a class="back" href="{{ url_for('index') }}">← Back to places</a>
+
+<article class="detail">
+    <div class="category">{{ place["category"] }}</div>
+    <h1>{{ place["name"] }}</h1>
+    <div class="rating big">★ {{ "%.1f"|format(place["rating"]) }}</div>
+    <p class="lead">{{ place["description"] }}</p>
+    <div class="meta">
+        <div><strong>City</strong><br>{{ place["city"] }}</div>
+        <div><strong>Status</strong><br>Open for discovery</div>
+    </div>
+</article>
+{% endblock %}
