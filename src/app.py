@@ -46,7 +46,6 @@ def index():
 
     conn = get_db()
 
-    # BUG 1: search is accidentally case-sensitive.
     if query:
         places = conn.execute(
             "SELECT * FROM places WHERE active = 1 AND name LIKE ? ORDER BY rating DESC",
@@ -57,7 +56,6 @@ def index():
             "SELECT * FROM places WHERE active = 1 ORDER BY rating DESC"
         ).fetchall()
 
-    # BUG 3: inactive places are included in the statistics.
     total_places = conn.execute("SELECT COUNT(*) FROM places").fetchone()[0]
     average_rating = conn.execute("SELECT AVG(rating) FROM places").fetchone()[0]
 
@@ -81,7 +79,6 @@ def place_details(place_id):
     ).fetchone()
     conn.close()
 
-    # BUG 2: a missing place is passed into the template instead of returning 404.
     return render_template("place.html", place=place)
 
 
