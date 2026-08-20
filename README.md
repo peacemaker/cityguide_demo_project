@@ -14,8 +14,16 @@ A small Flask website designed for a software-development demo.
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
-pip install -r requirements.txt
-python app.py
+pip install -r src/requirements.txt
+python3 src/app.py
+```
+
+Git Bash:
+```bash
+python3 -m venv .venv
+source .venv/Scripts/activate
+pip install -r src/requirements.txt
+python3 src/app.py
 ```
 
 Open http://127.0.0.1:5000
