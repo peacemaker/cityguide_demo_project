@@ -47,9 +47,11 @@ def index():
     conn = get_db()
 
     if query:
+        query_tokens = query.split()
+        where_clause = " AND ".join("name LIKE ?" for _ in query_tokens)
         places = conn.execute(
-            "SELECT * FROM places WHERE active = 1 AND name LIKE ? ORDER BY rating DESC",
-            (f"%{query}%",),
+            f"SELECT * FROM places WHERE active = 1 AND {where_clause} ORDER BY rating DESC",
+            tuple(f"%{token}%" for token in query_tokens),
         ).fetchall()
     else:
         places = conn.execute(
