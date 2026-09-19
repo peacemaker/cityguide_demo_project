@@ -79,6 +79,9 @@ def place_details(place_id):
     ).fetchone()
     conn.close()
 
+    if place is None:
+        abort(404)
+
     return render_template("place.html", place=place)
 
 
