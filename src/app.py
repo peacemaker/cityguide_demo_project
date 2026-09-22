@@ -47,9 +47,10 @@ def index():
     conn = get_db()
 
     if query:
+        search_pattern = f"%{'%'.join(query.split())}%"
         places = conn.execute(
             "SELECT * FROM places WHERE active = 1 AND name LIKE ? ORDER BY rating DESC",
-            (f"%{query}%",),
+            (search_pattern,),
         ).fetchall()
     else:
         places = conn.execute(
