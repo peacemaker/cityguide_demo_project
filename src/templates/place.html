@@ -7,11 +7,37 @@
 <article class="detail">
     <div class="category">{{ place["category"] }}</div>
     <h1>{{ place["name"] }}</h1>
-    <div class="rating big">★ {{ "%.1f"|format(place["rating"]) }}</div>
+    <div class="rating-summary big">
+        {% if place["rating_count"] %}
+            ★ {{ "%.1f"|format(place["average_rating"]) }} ({{ place["rating_count"] }} {{ "rating" if place["rating_count"] == 1 else "ratings" }})
+        {% else %}
+            No ratings yet (0 ratings)
+        {% endif %}
+    </div>
     <p class="lead">{{ place["description"] }}</p>
     <div class="meta">
         <div><strong>City</strong><br>{{ place["city"] }}</div>
         <div><strong>Status</strong><br>Open for discovery</div>
     </div>
 </article>
+
+<section class="rating-panel" aria-labelledby="rate-place-heading">
+    <h2 id="rate-place-heading">Rate this place</h2>
+    <p>Choose one of five stars based on your experience.</p>
+    <form class="rating-form" method="post" action="{{ url_for('place_details', place_id=place['id']) }}">
+        <fieldset>
+            <legend>Your rating</legend>
+            <div class="star-options" role="radiogroup" aria-label="Five-star rating">
+                {% for value in [1, 2, 3, 4, 5] %}
+                    <label class="star-option">
+                        <input type="radio" name="rating" value="{{ value }}" required>
+                        <span aria-hidden="true">★</span>
+                        <span class="sr-only">{{ value }} star{{ "s" if value != 1 else "" }}</span>
+                    </label>
+                {% endfor %}
+            </div>
+        </fieldset>
+        <button type="submit">Submit rating</button>
+    </form>
+</section>
 {% endblock %}
