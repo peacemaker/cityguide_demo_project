@@ -12,7 +12,7 @@
 
 <section class="stats">
     <div class="stat"><strong>{{ total_places }}</strong><span>places</span></div>
-    <div class="stat"><strong>{{ average_rating }}</strong><span>average rating</span></div>
+    <div class="stat"><strong>{{ "%.1f"|format(average_rating) }}</strong><span>average rating</span></div>
 </section>
 
 <form class="search" method="get">
@@ -25,7 +25,13 @@
     <article class="card">
         <div class="card-top">
             <span class="category">{{ place["category"] }}</span>
-            <span class="rating">★ {{ "%.1f"|format(place["rating"]) }}</span>
+            <span class="rating-summary">
+                {% if place["rating_count"] %}
+                    ★ {{ "%.1f"|format(place["average_rating"]) }} ({{ place["rating_count"] }} {{ "rating" if place["rating_count"] == 1 else "ratings" }})
+                {% else %}
+                    No ratings yet (0 ratings)
+                {% endif %}
+            </span>
         </div>
         <h2>{{ place["name"] }}</h2>
         <p>{{ place["description"] }}</p>
