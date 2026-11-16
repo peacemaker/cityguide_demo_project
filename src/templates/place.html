@@ -14,4 +14,40 @@
         <div><strong>Status</strong><br>Open for discovery</div>
     </div>
 </article>
+
+<section class="reviews" aria-labelledby="reviews-heading">
+    <div class="reviews-header">
+        <div>
+            <div class="category">Visitor reviews</div>
+            <h2 id="reviews-heading">Reviews for {{ place["name"] }}</h2>
+        </div>
+        <span class="review-count">{{ reviews|length }} {{ "review" if reviews|length == 1 else "reviews" }}</span>
+    </div>
+
+    {% if reviews %}
+        <ul class="review-list">
+            {% for review in reviews %}
+                <li class="review-item">
+                    <p>{{ review["body"] }}</p>
+                    <div class="review-meta">Shared by a visitor</div>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="empty review-empty">No reviews yet. Be the first visitor to share your experience.</p>
+    {% endif %}
+
+    <form class="review-form" method="post">
+        <h3>Leave a review</h3>
+        <p class="form-help">Tell other visitors what you thought about this place.</p>
+
+        {% if review_error %}
+            <p class="validation-error" role="alert">{{ review_error }}</p>
+        {% endif %}
+
+        <label for="review">Your written review</label>
+        <textarea id="review" name="review" rows="5" required>{{ review_text or "" }}</textarea>
+        <button type="submit">Submit review</button>
+    </form>
+</section>
 {% endblock %}

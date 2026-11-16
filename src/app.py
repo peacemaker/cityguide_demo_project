@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, abort
+from flask import Flask, abort, redirect, render_template, request, url_for
 import sqlite3
 from pathlib import Path
 
@@ -25,6 +25,16 @@ def init_db():
             rating REAL NOT NULL,
             active INTEGER NOT NULL DEFAULT 1
         );
+
+        CREATE TABLE IF NOT EXISTS reviews (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            place_id INTEGER NOT NULL,
+            body TEXT NOT NULL CHECK (length(trim(body)) > 0),
+            created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (place_id) REFERENCES places(id)
+        );
+
+        CREATE INDEX IF NOT EXISTS idx_reviews_place_id ON reviews(place_id);
 
         INSERT OR IGNORE INTO places
             (id, name, category, description, city, rating, active)
@@ -70,16 +80,55 @@ def index():
     )
 
 
-@app.route("/place/<int:place_id>")
-def place_details(place_id):
-    conn = get_db()
-    place = conn.execute(
+def get_active_place(conn, place_id):
+    return conn.execute(
         "SELECT * FROM places WHERE id = ? AND active = 1",
         (place_id,),
     ).fetchone()
+
+
+def get_place_reviews(conn, place_id):
+    return conn.execute(
+        "SELECT * FROM reviews WHERE place_id = ? ORDER BY id ASC",
+        (place_id,),
+    ).fetchall()
+
+
+@app.route("/place/<int:place_id>", methods=["GET", "POST"])
+def place_details(place_id):
+    conn = get_db()
+    place = get_active_place(conn, place_id)
+
+    if place is None:
+        conn.close()
+        abort(404)
+
+    if request.method == "POST":
+        review_body = request.form.get("review", "").strip()
+
+        if not review_body:
+            reviews = get_place_reviews(conn, place_id)
+            conn.close()
+            return render_template(
+                "place.html",
+                place=place,
+                reviews=reviews,
+                review_error="Please enter a review before submitting.",
+                review_text=request.form.get("review", ""),
+            ), 400
+
+        conn.execute(
+            "INSERT INTO reviews (place_id, body) VALUES (?, ?)",
+            (place_id, review_body),
+        )
+        conn.commit()
+        conn.close()
+        return redirect(url_for("place_details", place_id=place_id))
+
+    reviews = get_place_reviews(conn, place_id)
     conn.close()
 
-    return render_template("place.html", place=place)
+    return render_template("place.html", place=place, reviews=reviews)
 
 
 if __name__ == "__main__":
