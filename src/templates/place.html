@@ -7,11 +7,43 @@
 <article class="detail">
     <div class="category">{{ place["category"] }}</div>
     <h1>{{ place["name"] }}</h1>
-    <div class="rating big">★ {{ "%.1f"|format(place["rating"]) }}</div>
+
+    {% if place["rating_count"] > 0 %}
+        <div class="rating-summary big">★ {{ "%.1f"|format(place["average_rating"]) }} <span class="rating-count">({{ place["rating_count"] }} {{ "rating" if place["rating_count"] == 1 else "ratings" }})</span></div>
+    {% else %}
+        <div class="rating-summary no-ratings big">No ratings yet (0 ratings)</div>
+    {% endif %}
+
     <p class="lead">{{ place["description"] }}</p>
     <div class="meta">
         <div><strong>City</strong><br>{{ place["city"] }}</div>
         <div><strong>Status</strong><br>Open for discovery</div>
     </div>
+
+    <section class="rating-panel" aria-labelledby="rate-this-place">
+        <h2 id="rate-this-place">Rate this place</h2>
+        <p class="rating-help">Choose one rating from 1 to 5 stars and submit your opinion.</p>
+
+        {% if success_message %}
+            <div class="feedback success" role="status">{{ success_message }}</div>
+        {% endif %}
+        {% if validation_message %}
+            <div class="feedback error" role="alert">{{ validation_message }}</div>
+        {% endif %}
+
+        <form class="rating-form" method="post" action="{{ url_for('submit_rating', place_id=place['id']) }}">
+            <fieldset class="star-rating" aria-label="Five-star rating">
+                <legend>Your rating</legend>
+                {% for value in range(1, 6) %}
+                    <label>
+                        <input type="radio" name="rating" value="{{ value }}" {% if selected_rating == value|string %}checked{% endif %}>
+                        <span aria-hidden="true">★</span>
+                        <span class="sr-only">{{ value }} {{ "star" if value == 1 else "stars" }}</span>
+                    </label>
+                {% endfor %}
+            </fieldset>
+            <button type="submit">Submit rating</button>
+        </form>
+    </section>
 </article>
 {% endblock %}
