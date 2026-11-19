@@ -14,4 +14,41 @@
         <div><strong>Status</strong><br>Open for discovery</div>
     </div>
 </article>
+
+<section class="reviews" aria-labelledby="reviews-heading">
+    <div class="reviews-header">
+        <div>
+            <p class="eyebrow">VISITOR REVIEWS</p>
+            <h2 id="reviews-heading">Reviews</h2>
+        </div>
+        <span class="review-count">{{ reviews|length }} {{ "review" if reviews|length == 1 else "reviews" }}</span>
+    </div>
+
+    <form class="review-form" method="post">
+        <label for="review_text">Share your experience</label>
+        <textarea
+            id="review_text"
+            name="review_text"
+            rows="5"
+            placeholder="What did you think about {{ place['name'] }}?"
+            aria-describedby="review-help{% if review_error %} review-error{% endif %}"
+        >{{ review_text or "" }}</textarea>
+        <p id="review-help" class="form-help">Your anonymous written review will be visible to other visitors.</p>
+        {% if review_error %}
+            <p id="review-error" class="form-error" role="alert">{{ review_error }}</p>
+        {% endif %}
+        <button type="submit">Submit review</button>
+    </form>
+
+    <div class="review-list" aria-live="polite">
+        {% for review in reviews %}
+            <article class="review-card">
+                <div class="review-author">Anonymous visitor</div>
+                <p>{{ review["review_text"] }}</p>
+            </article>
+        {% else %}
+            <p class="reviews-empty">No reviews yet. Be the first visitor to share your experience.</p>
+        {% endfor %}
+    </div>
+</section>
 {% endblock %}
