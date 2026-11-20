@@ -25,7 +25,14 @@
     <article class="card">
         <div class="card-top">
             <span class="category">{{ place["category"] }}</span>
-            <span class="rating">★ {{ "%.1f"|format(place["rating"]) }}</span>
+            <span class="rating">
+                {% if place["rating_count"] %}
+                    ★ {{ "%.1f"|format(place["average_rating"]) }}
+                    <span class="rating-count">({{ place["rating_count"] }} {{ "rating" if place["rating_count"] == 1 else "ratings" }})</span>
+                {% else %}
+                    No ratings yet <span class="rating-count">(0 ratings)</span>
+                {% endif %}
+            </span>
         </div>
         <h2>{{ place["name"] }}</h2>
         <p>{{ place["description"] }}</p>
