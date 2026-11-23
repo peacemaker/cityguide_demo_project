@@ -26,6 +26,8 @@ button { border: 0; border-radius: 10px; padding: 0 22px; background: #5b67d8; c
 .card-top, .card-bottom { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
 .category { color: #5b67d8; font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; }
 .rating { color: #a15c00; font-weight: 700; }
+.rating-count { color: #667085; font-size: 14px; font-weight: 700; margin-top: 6px; }
+.detail-rating-count { margin-bottom: 20px; }
 .card h2 { margin: 14px 0 8px; }
 .card p { color: #667085; line-height: 1.55; min-height: 50px; }
 .card-bottom { color: #667085; font-size: 14px; margin-top: 20px; }
@@ -36,6 +38,17 @@ button { border: 0; border-radius: 10px; padding: 0 22px; background: #5b67d8; c
 .detail h1 { font-size: 48px; margin-bottom: 10px; }
 .big { font-size: 20px; }
 .meta { display: flex; gap: 80px; margin-top: 30px; padding-top: 25px; border-top: 1px solid #eaecf0; line-height: 1.7; }
+.rating-form { margin-top: 30px; padding-top: 25px; border-top: 1px solid #eaecf0; }
+.rating-form fieldset { border: 0; margin: 0; padding: 0; }
+.rating-form legend { font-size: 20px; font-weight: 800; margin-bottom: 6px; }
+.rating-form p { color: #667085; margin: 0 0 16px; }
+.star-options { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 18px; }
+.star-options label { cursor: pointer; }
+.star-options input { position: absolute; opacity: 0; }
+.star-options span { display: inline-block; border: 1px solid #d0d5dd; border-radius: 999px; padding: 10px 14px; color: #a15c00; font-weight: 800; background: #fffaf0; }
+.star-options input:focus + span,
+.star-options input:checked + span { border-color: #5b67d8; box-shadow: 0 0 0 3px rgba(91, 103, 216, .18); background: #eef0ff; }
+.rating-form button { min-height: 46px; }
 footer { padding: 28px 0; border-top: 1px solid #e4e7ec; color: #98a2b3; }
 @media (max-width: 700px) {
     .grid { grid-template-columns: 1fr; }

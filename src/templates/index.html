@@ -27,6 +27,7 @@
             <span class="category">{{ place["category"] }}</span>
             <span class="rating">★ {{ "%.1f"|format(place["rating"]) }}</span>
         </div>
+        <div class="rating-count">{{ place["rating_count"] }} rating{% if place["rating_count"] != 1 %}s{% endif %}</div>
         <h2>{{ place["name"] }}</h2>
         <p>{{ place["description"] }}</p>
         <div class="card-bottom">
