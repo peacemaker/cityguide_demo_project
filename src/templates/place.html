@@ -8,10 +8,27 @@
     <div class="category">{{ place["category"] }}</div>
     <h1>{{ place["name"] }}</h1>
     <div class="rating big">★ {{ "%.1f"|format(place["rating"]) }}</div>
+    <div class="rating-count detail-rating-count">{{ place["rating_count"] }} rating{% if place["rating_count"] != 1 %}s{% endif %}</div>
     <p class="lead">{{ place["description"] }}</p>
     <div class="meta">
         <div><strong>City</strong><br>{{ place["city"] }}</div>
         <div><strong>Status</strong><br>Open for discovery</div>
     </div>
+
+    <form class="rating-form" method="post" action="{{ url_for('rate_place', place_id=place['id']) }}">
+        <fieldset>
+            <legend>Rate this place</legend>
+            <p>Share your experience with a five-star rating.</p>
+            <div class="star-options" role="radiogroup" aria-label="Choose a rating from 1 to 5 stars">
+                {% for stars in range(1, 6) %}
+                    <label>
+                        <input type="radio" name="rating" value="{{ stars }}" required>
+                        <span>{{ stars }} ★</span>
+                    </label>
+                {% endfor %}
+            </div>
+            <button type="submit">Submit rating</button>
+        </fieldset>
+    </form>
 </article>
 {% endblock %}
