@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, abort
+from flask import Flask, render_template, request, abort, redirect, url_for
 import sqlite3
 from pathlib import Path
 
@@ -24,6 +24,13 @@ def init_db():
             city TEXT NOT NULL,
             rating REAL NOT NULL,
             active INTEGER NOT NULL DEFAULT 1
+        );
+
+        CREATE TABLE IF NOT EXISTS reviews (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            place_id INTEGER NOT NULL,
+            review_text TEXT NOT NULL,
+            FOREIGN KEY (place_id) REFERENCES places(id)
         );
 
         INSERT OR IGNORE INTO places
@@ -70,16 +77,49 @@ def index():
     )
 
 
-@app.route("/place/<int:place_id>")
+@app.route("/place/<int:place_id>", methods=["GET", "POST"])
 def place_details(place_id):
     conn = get_db()
-    place = conn.execute(
-        "SELECT * FROM places WHERE id = ? AND active = 1",
-        (place_id,),
-    ).fetchone()
-    conn.close()
+    review_error = None
+    review_form_text = ""
 
-    return render_template("place.html", place=place)
+    try:
+        place = conn.execute(
+            "SELECT * FROM places WHERE id = ? AND active = 1",
+            (place_id,),
+        ).fetchone()
+
+        if place is None:
+            abort(404)
+
+        if request.method == "POST":
+            review_form_text = request.form.get("review_text", "")
+            review_text = review_form_text.strip()
+
+            if review_text:
+                conn.execute(
+                    "INSERT INTO reviews (place_id, review_text) VALUES (?, ?)",
+                    (place_id, review_text),
+                )
+                conn.commit()
+                return redirect(url_for("place_details", place_id=place_id))
+
+            review_error = "Please enter a written review before submitting."
+
+        reviews = conn.execute(
+            "SELECT id, review_text FROM reviews WHERE place_id = ? ORDER BY id ASC",
+            (place_id,),
+        ).fetchall()
+
+        return render_template(
+            "place.html",
+            place=place,
+            reviews=reviews,
+            review_error=review_error,
+            review_form_text=review_form_text,
+        )
+    finally:
+        conn.close()
 
 
 if __name__ == "__main__":
